@@ -9,6 +9,7 @@ This project demonstrates how to use [Zod](https://zod.dev/), a TypeScript-first
 - [Setting Up Project](#setting-up-project)
 - [Basic Customization](#basic-customization)
 - [Advanced Customization](#advanced-customization)
+- [Best Practices](#best-practices)
 
 ---
 
@@ -75,7 +76,7 @@ const signUpSchemas = z.object({
       ctx.addIssue({
         code: z.ZodIssueCode.too_big,
         maximum: 3,
-        type: "array",
+        type: "string",
         inclusive: true,
         message: "Too many items 😡",
       });
@@ -128,3 +129,10 @@ export const signUpSchemas = z.object({
   }),
 });
 ```
+
+## Best Practices
+
+1. **Be Concise and Informative**: Error messages should be brief yet specific.
+2. **Avoid Technical Jargon**: Use language that is easy for end-users to understand.
+3. **Focus on Solutions**: Guide users on how to correct their input.
+4. **Test for Accessibility**: Ensure messages are accessible for screen readers and other assistive technologies.
