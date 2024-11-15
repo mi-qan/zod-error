@@ -1,50 +1,130 @@
-# React + TypeScript + Vite
+# Customizing Errors with ZodErrorMap
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates how to use [Zod](https://zod.dev/), a TypeScript-first schema validation library, to create custom error messages using `ZodErrorMap`. With `ZodErrorMap`, you can centralize and customize validation errors, making them user-friendly, context-aware, and even localized.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Introduction](#introduction)
+- [Why Customize Errors with ZodErrorMap?](#why-customize-errors-with-zoderrormap)
+- [Setting Up Project](#setting-up-project)
+- [Basic Customization](#basic-customization)
+- [Advanced Customization](#advanced-customization)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Introduction
 
-- Configure the top-level `parserOptions` property like this:
+Zod is a schema validation library designed for TypeScript that provides runtime type-checking. `ZodErrorMap` is a feature within Zod that enables you to customize error messages globally, helping to streamline and simplify error handling across your application.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Why Customize Errors with ZodErrorMap?
+
+Customizing error messages provides several benefits:
+
+1. **Consistency**: Centralize error messages to maintain consistent language and tone across your app.
+2. **Localization**: Easily localize error messages for multilingual applications.
+3. **Improved User Experience**: Informative and context-sensitive error messages help guide users, reducing frustration and improving usability.
+
+## Setting Up Project
+
+Follow these steps to set up a custom `ZodErrorMap` in `signUpSchemas.ts`:
+
+1. **Install Zod**:
+   ```bash
+   npm i zod
+   ```
+2. **Install React Hook Form**:
+   ```bash
+   npm i react-hook-form
+   ```
+3. **Install Resolver**:
+   ```bash
+   npm i @hookform/resolvers
+   ```
+4. **Other dependencies**:
+   ```bash
+   npm i clsx
+   npm i lucide-react
+   npm i tailwind-merge
+   npm i querystring-es3
+   npm i @radix-ui/themes
+   npm i class-variance-authority
+   ```
+
+## Basic Customization
+
+- [`.refine(validator: (data:T)=>any, params?: RefineParams)`](https://zod.dev/?id=refine)
+
+```typescript
+import { ZodErrorMap, z } from "zod";
+
+const signUpSchemas = z.object({
+  userName: z.string().refine((val) => val.length <= 255, {
+    message: "String can't be more than 255 characters",
+  }),
+});
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- [`.superRefine`](https://zod.dev/?id=superrefine)
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```typescript
+import { ZodErrorMap, z } from "zod";
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+const signUpSchemas = z.object({
+  userName: z.string().superRefine((val, ctx) => {
+    if (val.length > 3) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_big,
+        maximum: 3,
+        type: "array",
+        inclusive: true,
+        message: "Too many items 😡",
+      });
+    }
+  }),
+});
+```
+
+## Advanced Customization
+
+For more complex error handling, [`ZodErrorMap`](https://zod.dev/ERROR_HANDLING?id=customizing-errors-with-zoderrormap) allows you to use the `issue` and `context` parameters to create dynamic error messages based on the specific field name or additional conditions.
+
+```typescript
+import { ZodErrorMap, z } from "zod";
+
+const customErrorMap: ZodErrorMap = (issue, ctx) => {
+  if (issue.code === z.ZodIssueCode.too_small) {
+    return { message: "Your password is too short!" };
+  }
+
+  if (issue.code === z.ZodIssueCode.custom) {
+    return { message: `${(issue.params || {}).email}` };
+  }
+
+  //return default error message in Zod
+  return { message: ctx.defaultError };
+};
+
+//set global error map
+z.setErrorMap(customErrorMap);
+
+export const signUpSchemas = z.object({
+  userName: z.string({ errorMap: customErrorMap }).superRefine((val, ctx) => {
+    if (val.length < 6) {
+      ctx.addIssue({
+        code: "too_small",
+        inclusive: true,
+        minimum: 6,
+        type: "string",
+      });
+    }
+  }),
+  email: z.string({ errorMap: customErrorMap }).superRefine((val, ctx) => {
+    if (!val) {
+      ctx.addIssue({
+        code: "custom",
+        params: { email: "include_email" },
+      });
+    }
+  }),
+});
 ```
