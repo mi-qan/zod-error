@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Ultralight.ttf");
+  font-style: normal;
+  font-weight: 100;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Thin.ttf");
+  font-style: normal;
+  font-weight: 200;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Light.ttf");
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Regular.ttf");
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Medium.ttf");
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Semibold.ttf");
+  font-style: normal;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Bold.ttf");
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Heavy.ttf");
+  font-style: normal;
+  font-weight: 800;
+}
+@font-face {
+  font-family: "SF Pro";
+  src: url("../public/static/font/SF-Pro/SF-Pro-Black.ttf");
+  font-style: normal;
+  font-weight: 900;
+}
+
+@layer base {
+  :root {
+    --background: #fff;
+    --foreground: #020817;
+
+    --card: #fff;
+    --card-foreground: #020817;
+
+    --popover: #fff;
+    --popover-foreground: #020817;
+
+    --primary: #ff6f61;
+    --primary-foreground: #f8fafc;
+
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
+
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+
+    --accent: #f1f5f9;
+    --accent-foreground: #0f172a;
+
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
+
+    --snow: #fcfaf8;
+    --moon-blue: #7db4c4;
+    --outer-space: #464a51;
+    --lemon: #c2e812;
+    --jungle-green: #1d3136;
+    --rose-wood: #c8a7a7;
+    --roman-silver: #808c98;
+
+    --border: #dbdbdb;
+    --input: #dbdbdb;
+    --ring: #020817;
+
+    --radius: 0.8rem;
+  }
+
+  html,
+  body {
+    font-size: 10px;
+    background-color: var(--snow);
+    line-height: 1;
+  }
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+}
+
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(0, 0%, 90%);
+  }
+  100% {
+    background-color: hsl(0, 0%, 70%);
+  }
+}
+
+* {
+  &:not(html, body) {
+    ::-webkit-scrollbar {
+      width: 2rem;
+
+      @media (min-width: 768px) {
+        width: 1.6rem;
+      }
+    }
+
+    ::-webkit-scrollbar-track {
+      border-radius: 0.2rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--border);
+      border-radius: 0.6rem;
+      border: 0.4rem solid rgba(0, 0, 0, 0);
+      background-clip: padding-box;
+
+      &:hover {
+        background-color: #bbbbbb;
+      }
+    }
+  }
+}
